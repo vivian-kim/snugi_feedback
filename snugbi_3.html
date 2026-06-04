@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Snugbi — Your Pet's Guardian</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,300&family=DM+Sans:wght@300;400;500&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --night:#0C0B12;--deep:#111019;--surface:#1A1826;--card:#1F1D2E;
+  --purple:#7C5CF0;--pl:#A98EFF;--gold:#F5C842;--gw:#FFB84D;
+  --cream:#F2EDE0;--muted:#8A8299;--text:#EAE5F5;--green:#6EE7B7;--red:#FF6B6B;
+}
+html{scroll-behavior:smooth}
+body{background:var(--night);color:var(--text);font-family:'DM Sans',system-ui,sans-serif;font-weight:300;overflow-x:hidden;line-height:1.6}
+h1,h2,.logo{font-family:'Fraunces',Georgia,serif}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:16px 40px;background:rgba(12,11,18,.95);backdrop-filter:blur(16px);border-bottom:1px solid rgba(255,255,255,.05)}
+.logo{font-size:22px;font-weight:600;color:var(--gold);letter-spacing:-.5px}
+.logo span{font-family:'DM Sans',sans-serif;font-size:11px;color:var(--muted);font-weight:300;margin-left:6px;letter-spacing:.04em}
+.nav-links{display:flex;gap:28px}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:13px;transition:color .2s}
+.nav-links a:hover{color:var(--text)}
+.nav-cta{background:var(--purple);color:#fff;padding:9px 20px;border-radius:100px;font-size:13px;font-weight:500;text-decoration:none;transition:all .2s}
+.nav-cta:hover{background:var(--pl)}
+@media(max-width:700px){nav{padding:14px 16px}.nav-links{display:none}}
+
+/* HERO */
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:100px 20px 60px;position:relative;overflow:hidden}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 70% 50% at 50% 20%,rgba(124,92,240,.15) 0%,transparent 70%),radial-gradient(ellipse 40% 40% at 85% 80%,rgba(245,200,66,.05) 0%,transparent 60%)}
+.hero h1{position:relative;z-index:1;font-size:clamp(52px,9vw,100px);font-weight:300;line-height:.95;letter-spacing:-3px;color:var(--cream);margin-bottom:16px;animation:up .7s .1s both}
+.hero h1 em{font-style:italic;color:var(--gold)}
+.hero h1 .a2{display:block;color:var(--pl)}
+.hero p{position:relative;z-index:1;font-family:'Fraunces',Georgia,serif;font-style:italic;font-size:clamp(15px,2.2vw,21px);color:var(--muted);margin-bottom:40px;line-height:1.65;animation:up .7s .2s both}
+.hero-btns{position:relative;z-index:1;display:flex;gap:12px;flex-wrap:wrap;justify-content:center;animation:up .7s .3s both}
+.btn-gold{background:var(--gold);color:var(--night);padding:14px 32px;border-radius:100px;font-size:14px;font-weight:500;text-decoration:none;transition:all .2s}
+.btn-gold:hover{background:var(--gw);transform:translateY(-2px);box-shadow:0 16px 40px rgba(245,200,66,.2)}
+.btn-ghost{background:rgba(255,255,255,.05);color:var(--text);border:1px solid rgba(255,255,255,.1);padding:14px 32px;border-radius:100px;font-size:14px;text-decoration:none;transition:all .2s}
+.btn-ghost:hover{background:rgba(255,255,255,.09);transform:translateY(-2px)}
+.orb-wrap{position:relative;z-index:1;margin-top:52px;animation:up .7s .4s both;display:flex;flex-direction:column;align-items:center}
+.orb{width:180px;height:180px;border-radius:50%;background:radial-gradient(circle at 38% 32%,#241D42,#0E0C1A);border:1px solid rgba(124,92,240,.22);display:flex;align-items:center;justify-content:center;position:relative;box-shadow:0 0 60px rgba(124,92,240,.14)}
+.orb-emoji{font-size:64px}
+.ring{position:absolute;inset:-16px;border-radius:50%;border:1px dashed rgba(124,92,240,.18);animation:spin 24s linear infinite}
+.ring::after{content:'';position:absolute;top:12px;left:50%;width:6px;height:6px;border-radius:50%;background:var(--gold);transform:translateX(-50%)}
+@keyframes spin{to{transform:rotate(360deg)}}
+.orb-tags{margin-top:20px;display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.otag{background:var(--surface);border:1px solid rgba(255,255,255,.07);border-radius:100px;padding:5px 12px;font-size:11px;color:var(--muted)}
+@keyframes up{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+/* STATS */
+.stats{background:var(--surface);border-top:1px solid rgba(255,255,255,.05);border-bottom:1px solid rgba(255,255,255,.05);padding:28px 40px;display:flex;justify-content:center;gap:48px;flex-wrap:wrap}
+.stat{text-align:center}
+.stat-n{font-family:'Fraunces',Georgia,serif;font-size:32px;font-weight:300;color:var(--gold);line-height:1}
+.stat-l{font-size:11px;color:var(--muted);margin-top:4px;letter-spacing:.05em;text-transform:uppercase}
+
+/* SECTIONS */
+section{padding:88px 20px}
+.inner{max-width:1060px;margin:0 auto}
+.lbl{font-size:11px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--pl);margin-bottom:12px}
+h2{font-family:'Fraunces',Georgia,serif;font-size:clamp(30px,5vw,50px);font-weight:300;line-height:1.08;letter-spacing:-1.2px;color:var(--cream);margin-bottom:16px}
+h2 em{font-style:italic;color:var(--gold)}
+.body{font-size:15px;line-height:1.8;color:var(--muted);max-width:500px}
+
+/* FOLLOWS */
+.follows{background:var(--deep)}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center;margin-top:48px}
+@media(max-width:700px){.two-col{grid-template-columns:1fr}}
+.follow-vis{background:radial-gradient(circle at 50% 40%,rgba(124,92,240,.1),transparent 65%),var(--card);border-radius:22px;padding:36px 28px;border:1px solid rgba(255,255,255,.05);text-align:center}
+.room{position:relative;height:220px;background:rgba(0,0,0,.2);border-radius:14px;overflow:hidden;margin-bottom:16px;border:1px solid rgba(255,255,255,.04)}
+.room-label{font-size:11px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-bottom:12px}
+.pet{position:absolute;font-size:26px;animation:petM 8s ease-in-out infinite}
+.bot{position:absolute;font-size:20px;animation:botM 8s ease-in-out infinite}
+@keyframes petM{0%{top:40%;left:15%}25%{top:15%;left:55%}50%{top:55%;left:70%}75%{top:65%;left:25%}100%{top:40%;left:15%}}
+@keyframes botM{0%{top:44%;left:26%}25%{top:19%;left:66%}50%{top:59%;left:80%}75%{top:69%;left:36%}100%{top:44%;left:26%}}
+.follow-key{display:flex;gap:16px;justify-content:center;font-size:12px;color:var(--muted)}
+.follow-pts{display:flex;flex-direction:column;gap:16px}
+.fp{display:flex;gap:14px;padding:18px;border-radius:14px;border:1px solid rgba(255,255,255,.05);background:rgba(255,255,255,.015);transition:all .3s}
+.fp:hover{border-color:rgba(124,92,240,.25);transform:translateX(4px)}
+.fp-ic{min-width:38px;height:38px;border-radius:10px;background:rgba(124,92,240,.1);border:1px solid rgba(124,92,240,.2);display:flex;align-items:center;justify-content:center;font-size:16px}
+.fp-t{font-size:14px;font-weight:500;color:var(--text);margin-bottom:4px}
+.fp-d{font-size:12px;color:var(--muted);line-height:1.65}
+
+/* HEALTH */
+.health{background:var(--night)}
+.hdr2{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:end;margin-bottom:40px}
+@media(max-width:700px){.hdr2{grid-template-columns:1fr}}
+.hgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+@media(max-width:700px){.hgrid{grid-template-columns:1fr}}
+.hcard{background:var(--card);border-radius:16px;border:1px solid rgba(255,255,255,.05);padding:24px;transition:all .3s}
+.hcard:hover{border-color:rgba(124,92,240,.22);transform:translateY(-4px)}
+.hcard.danger{border-color:rgba(255,107,107,.12)}
+.hcard.danger:hover{border-color:rgba(255,107,107,.28)}
+.hi{font-size:26px;margin-bottom:12px;display:block}
+.hn{font-size:14px;font-weight:500;color:var(--text);margin-bottom:7px}
+.hd{font-size:12px;color:var(--muted);line-height:1.7}
+.htag{display:inline-block;margin-top:9px;font-size:10px;font-weight:500;letter-spacing:.05em;text-transform:uppercase}
+.tp{color:var(--pl)}.tg{color:var(--gold)}.tgr{color:var(--green)}.tr{color:var(--red)}
+
+/* PATTERN */
+.pattern{background:var(--deep)}
+.tl{display:flex;flex-direction:column;gap:0}
+.tli{display:flex;gap:14px;position:relative}
+.tli::before{content:'';position:absolute;left:18px;top:38px;bottom:-4px;width:1px;background:rgba(255,255,255,.06)}
+.tli:last-child::before{display:none}
+.tld{min-width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;border:1px solid rgba(255,255,255,.07);background:var(--card);position:relative;z-index:1;margin-bottom:6px}
+.tld.ok{background:rgba(110,231,183,.08);border-color:rgba(110,231,183,.2)}
+.tld.act{background:rgba(124,92,240,.12);border-color:rgba(124,92,240,.25)}
+.tld.warn{background:rgba(245,200,66,.08);border-color:rgba(245,200,66,.2)}
+.tlt{font-size:11px;color:var(--muted);margin-bottom:3px;font-weight:500}
+.tle{font-size:13px;color:var(--text);margin-bottom:2px}
+.tldesc{font-size:12px;color:var(--muted);line-height:1.5;margin-bottom:14px}
+.pstats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:24px}
+.ps{background:var(--card);border:1px solid rgba(255,255,255,.05);border-radius:12px;padding:16px}
+.ps-n{font-family:'Fraunces',Georgia,serif;font-size:26px;font-weight:300;color:var(--gold);line-height:1;margin-bottom:4px}
+.ps-l{font-size:11px;color:var(--muted);line-height:1.4}
+
+/* SENSORS */
+.sensors{background:var(--night)}
+.sgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:40px}
+@media(max-width:700px){.sgrid{grid-template-columns:1fr}}
+.sc{background:var(--card);border-radius:16px;border:1px solid rgba(255,255,255,.05);padding:20px 24px;display:flex;gap:14px;align-items:flex-start;transition:all .3s}
+.sc:hover{border-color:rgba(124,92,240,.2);transform:translateY(-2px)}
+.sci{min-width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.sip{background:rgba(124,92,240,.1);border:1px solid rgba(124,92,240,.18)}
+.sig{background:rgba(245,200,66,.07);border:1px solid rgba(245,200,66,.15)}
+.sigr{background:rgba(110,231,183,.07);border:1px solid rgba(110,231,183,.15)}
+.sir{background:rgba(255,107,107,.07);border:1px solid rgba(255,107,107,.15)}
+.scn{font-size:13px;font-weight:500;color:var(--text);margin-bottom:4px}
+.scd{font-size:12px;color:var(--muted);line-height:1.6}
+
+/* REPORT */
+.report{background:var(--deep)}
+.rc{background:var(--card);border-radius:18px;border:1px solid rgba(255,255,255,.07);padding:24px}
+.rch{display:flex;justify-content:space-between;align-items:center;padding-bottom:14px;border-bottom:1px solid rgba(255,255,255,.05);margin-bottom:18px}
+.rct{font-size:13px;font-weight:500;color:var(--text)}
+.rcd{font-size:12px;color:var(--muted)}
+.rcr{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.03)}
+.rcl{font-size:12px;color:var(--muted)}
+.rcv{font-size:12px;font-weight:500;color:var(--text)}
+.rcv.ok{color:var(--green)}.rcv.warn{color:var(--gold)}.rcv.bad{color:var(--red)}
+.rca{margin-top:16px;padding:12px 14px;background:rgba(245,200,66,.07);border:1px solid rgba(245,200,66,.16);border-radius:10px;font-size:12px;color:#F5C842;line-height:1.6}
+.rcf{margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,.05);display:flex;justify-content:space-between;align-items:center}
+.rcf span{font-size:11px;color:var(--muted)}
+.dlb{background:rgba(124,92,240,.1);border:1px solid rgba(124,92,240,.22);color:var(--pl);border-radius:100px;padding:5px 14px;font-size:11px;font-weight:500;cursor:pointer;font-family:inherit;transition:all .2s}
+.dlb:hover{background:rgba(124,92,240,.2)}
+.rpts{display:flex;flex-direction:column;gap:20px;margin-top:28px}
+.rp{display:flex;gap:14px}
+.rpi{min-width:38px;height:38px;border-radius:10px;background:rgba(124,92,240,.1);border:1px solid rgba(124,92,240,.16);display:flex;align-items:center;justify-content:center;font-size:15px}
+.rpt{font-size:14px;font-weight:500;color:var(--text);margin-bottom:3px}
+.rpd{font-size:12px;color:var(--muted);line-height:1.65}
+
+/* PLAY */
+.play{background:var(--night)}
+.ptabs{display:flex;gap:8px;margin-bottom:20px}
+.tab{background:var(--surface);border:1px solid rgba(255,255,255,.07);border-radius:100px;padding:7px 18px;font-size:13px;color:var(--muted);cursor:pointer;transition:all .2s;font-family:inherit}
+.tab.on{background:var(--purple);border-color:var(--purple);color:#fff;font-weight:500}
+.tab:hover:not(.on){border-color:rgba(124,92,240,.25);color:var(--text)}
+.pgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+@media(max-width:700px){.pgrid{grid-template-columns:1fr 1fr}}
+.pcard{background:var(--card);border-radius:14px;border:1px solid rgba(255,255,255,.05);padding:20px;transition:all .3s}
+.pcard:hover{border-color:rgba(124,92,240,.18);transform:translateY(-3px)}
+.pi{font-size:24px;margin-bottom:10px}
+.pn{font-size:13px;font-weight:500;color:var(--text);margin-bottom:5px}
+.pd{font-size:12px;color:var(--muted);line-height:1.65}
+.tc{display:none}.tc.on{display:grid}
+
+/* MODES */
+.modes{background:var(--deep)}
+.mgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:40px}
+@media(max-width:700px){.mgrid{grid-template-columns:1fr}}
+.mc{background:var(--card);border-radius:16px;border:1px solid rgba(255,255,255,.05);padding:24px;transition:all .3s}
+.mc:hover{border-color:rgba(124,92,240,.2);transform:translateY(-3px)}
+.mi{font-size:26px;margin-bottom:12px;display:block}
+.mn{font-size:14px;font-weight:500;color:var(--text);margin-bottom:7px}
+.md{font-size:12px;color:var(--muted);line-height:1.7}
+.mt{display:inline-block;margin-top:9px;font-size:10px;font-weight:500;color:var(--pl);letter-spacing:.05em;text-transform:uppercase}
+
+/* PRICING */
+.pricing{background:var(--night);text-align:center}
+.pricing .body{margin:0 auto;text-align:center}
+.pgr{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;max-width:860px;margin:48px auto 0}
+@media(max-width:700px){.pgr{grid-template-columns:1fr}}
+.pc{background:var(--card);border-radius:20px;border:1px solid rgba(255,255,255,.06);padding:28px;transition:all .3s}
+.pc.hot{background:linear-gradient(145deg,rgba(124,92,240,.14),rgba(124,92,240,.04));border-color:rgba(124,92,240,.35);transform:scale(1.04)}
+@media(max-width:700px){.pc.hot{transform:none}}
+.pbadge{display:inline-block;background:var(--purple);color:#fff;font-size:10px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;padding:3px 10px;border-radius:100px;margin-bottom:12px}
+.pname{font-size:11px;font-weight:500;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px}
+.pprice{font-family:'Fraunces',Georgia,serif;font-size:42px;font-weight:300;color:var(--cream);line-height:1;margin-bottom:4px}
+.pprice span{font-size:14px;color:var(--muted);font-family:'DM Sans',sans-serif}
+.psub{font-size:11px;color:var(--muted);margin-bottom:20px}
+.pdiv{height:1px;background:rgba(255,255,255,.06);margin-bottom:16px}
+.pf{display:flex;gap:8px;font-size:12px;color:var(--muted);margin-bottom:9px;line-height:1.5;text-align:left}
+.pf .y{color:var(--green);flex-shrink:0}.pf .n{color:rgba(255,255,255,.18);flex-shrink:0}
+.pbtn{width:100%;margin-top:20px;padding:12px;border-radius:100px;font-size:13px;font-weight:500;cursor:pointer;font-family:inherit;border:none;transition:all .2s}
+.pbtn.out{background:transparent;color:var(--text);border:1px solid rgba(255,255,255,.14)}
+.pbtn.out:hover{background:rgba(255,255,255,.06)}
+.pbtn.fill{background:var(--purple);color:#fff}
+.pbtn.fill:hover{background:var(--pl)}
+
+/* FEEDBACK */
+.feedback{background:var(--deep);text-align:center}
+.fbc{max-width:580px;margin:40px auto 0;background:var(--card);border-radius:22px;border:1px solid rgba(124,92,240,.18);padding:36px;text-align:left}
+.fq{font-size:14px;color:var(--text);margin-bottom:12px;font-weight:400}
+.stars{display:flex;gap:10px;margin-bottom:20px}
+.star{font-size:26px;cursor:pointer;transition:transform .15s;opacity:.25}
+.star:hover,.star.on{opacity:1;transform:scale(1.2)}
+.fchks{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 20px}
+.fck{background:var(--surface);border:1px solid rgba(255,255,255,.07);border-radius:100px;padding:6px 14px;font-size:12px;color:var(--muted);cursor:pointer;transition:all .2s;user-select:none}
+.fck.on{background:rgba(124,92,240,.14);border-color:rgba(124,92,240,.38);color:var(--pl)}
+textarea{width:100%;background:var(--surface);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:12px 16px;font-size:13px;color:var(--text);font-family:inherit;resize:vertical;min-height:90px;outline:none;transition:border-color .2s}
+textarea::placeholder{color:var(--muted)}
+textarea:focus{border-color:rgba(124,92,240,.4)}
+input[type=email]{width:100%;background:var(--surface);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:11px 16px;font-size:13px;color:var(--text);font-family:inherit;outline:none;transition:border-color .2s;margin-top:6px}
+input[type=email]::placeholder{color:var(--muted)}
+input[type=email]:focus{border-color:rgba(124,92,240,.4)}
+.fbsub{background:var(--gold);color:var(--night);border:none;border-radius:100px;padding:12px 28px;font-size:14px;font-weight:500;cursor:pointer;font-family:inherit;margin-top:16px;transition:all .2s}
+.fbsub:hover{background:var(--gw);transform:translateY(-1px)}
+.fb-ok{display:none;text-align:center;padding:20px 0}
+.fb-ok .be{font-size:44px;margin-bottom:12px}
+
+/* WAITLIST */
+.waitlist{background:linear-gradient(135deg,rgba(124,92,240,.1),rgba(245,200,66,.04)),var(--night);text-align:center;padding:104px 20px;border-top:1px solid rgba(124,92,240,.1)}
+.waitlist h2{font-size:clamp(34px,6vw,64px);letter-spacing:-1.5px;margin-bottom:18px}
+.waitlist h2 em{font-style:italic;color:var(--gold)}
+.wsub{font-size:16px;color:var(--muted);margin-bottom:36px}
+.wform{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;max-width:440px;margin:0 auto}
+.wfield{flex:1;min-width:200px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:100px;padding:13px 20px;font-size:14px;color:var(--text);font-family:inherit;outline:none;transition:border-color .2s}
+.wfield::placeholder{color:var(--muted)}
+.wfield:focus{border-color:rgba(124,92,240,.45)}
+.wbtn{background:var(--gold);color:var(--night);border:none;border-radius:100px;padding:13px 24px;font-size:14px;font-weight:500;cursor:pointer;font-family:inherit;transition:all .2s}
+.wbtn:hover{background:var(--gw);transform:translateY(-2px)}
+.wnote{font-size:12px;color:var(--muted);margin-top:12px}
+
+/* FOOTER */
+footer{background:var(--night);border-top:1px solid rgba(255,255,255,.04);padding:32px 40px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.fl{font-family:'Fraunces',Georgia,serif;font-size:18px;font-weight:600;color:var(--gold)}
+.fl small{font-family:'DM Sans',sans-serif;font-size:11px;color:var(--muted);font-weight:300;margin-left:6px}
+.fc{font-size:11px;color:var(--muted)}
+
+/* REVEAL */
+.rv{opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .6s ease}
+.rv.on{opacity:1;transform:translateY(0)}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">Snugbi <span>your pet's guardian</span></div>
+  <div class="nav-links">
+    <a href="#follows">How it follows</a>
+    <a href="#health">Health</a>
+    <a href="#pattern">Daily pattern</a>
+    <a href="#report">Reports</a>
+    <a href="#pricing">Pricing</a>
+  </div>
+  <a href="#waitlist" class="nav-cta">Join waitlist</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <h1>Your pet's<br><em>guardian.</em><span class="a2">Always.</span></h1>
+  <p>Snugbi follows your pet everywhere, watches over their health,<br>and tells you exactly how they're doing — every single day.</p>
+  <div class="hero-btns">
+    <a href="#waitlist" class="btn-gold">🐾 Join the waitlist</a>
+    <a href="#follows" class="btn-ghost">See how it works</a>
+  </div>
+  <div class="orb-wrap">
+    <div class="orb">
+      <div class="ring"></div>
+      <span class="orb-emoji">🧸</span>
+    </div>
+    <div class="orb-tags">
+      <span class="otag">🤖 AI-powered</span>
+      <span class="otag">📡 follows your pet</span>
+      <span class="otag">🩺 vet reports</span>
+      <span class="otag">❤️ always watching</span>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats rv">
+  <div class="stat"><div class="stat-n">60%</div><div class="stat-l">Indoor cats are obese</div></div>
+  <div class="stat"><div class="stat-n">47%</div><div class="stat-l">Dogs have separation anxiety</div></div>
+  <div class="stat"><div class="stat-n">24/7</div><div class="stat-l">Snugbi never stops watching</div></div>
+  <div class="stat"><div class="stat-n">30 days</div><div class="stat-l">Of data for your vet</div></div>
+</div>
+
+<!-- FOLLOWS YOUR PET -->
+<section class="follows" id="follows">
+  <div class="inner">
+    <div class="two-col">
+      <div class="rv">
+        <p class="lbl">Always by their side</p>
+        <h2>Snugbi follows<br><em>wherever they go.</em></h2>
+        <p class="body" style="margin-bottom:32px">Most pet cameras have blind spots. Snugbi doesn't. The smart collar broadcasts a Bluetooth signal — Snugbi reads the distance and follows your pet from room to room, automatically.</p>
+        <div class="follow-pts">
+          <div class="fp"><div class="fp-ic">📡</div><div><div class="fp-t">Collar signal tracking</div><div class="fp-d">Snugbi reads your pet's collar Bluetooth signal continuously. When signal weakens your pet is moving away — Snugbi navigates toward the strongest signal.</div></div></div>
+          <div class="fp"><div class="fp-ic">📏</div><div><div class="fp-t">Distance-aware following</div><div class="fp-d">Maintains a comfortable distance — close enough to monitor, far enough not to stress. Never chases aggressively. Backs off if the pet is stressed.</div></div></div>
+          <div class="fp"><div class="fp-ic">🛡️</div><div><div class="fp-t">No blind spots, ever</div><div class="fp-d">Traditional cameras miss what's behind furniture or in other rooms. Snugbi moves with your pet — always in range, always observing.</div></div></div>
+          <div class="fp"><div class="fp-ic">🔋</div><div><div class="fp-t">Passive collar charging</div><div class="fp-d">Collar charges wirelessly when your pet is near Snugbi. No owner effort needed. Play sessions double as charging sessions.</div></div></div>
+        </div>
+      </div>
+      <div class="follow-vis rv">
+        <div class="room-label">Live simulation — Snugbi following collar signal</div>
+        <div class="room">
+          <div class="pet">🐱</div>
+          <div class="bot">🧸</div>
+        </div>
+        <div class="follow-key">
+          <span>🐱 Your pet</span>
+          <span>🧸 Snugbi</span>
+          <span>📡 Collar signal</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HEALTH MONITORING -->
+<section class="health" id="health">
+  <div class="inner">
+    <div class="hdr2 rv">
+      <div>
+        <p class="lbl">Health monitoring</p>
+        <h2>Not just watching.<br><em>Understanding.</em></h2>
+      </div>
+      <p class="body">Snugbi uses camera, microphone, motion sensors, and collar data to build a complete picture of your pet's health — every hour of every day. Week 1 is learning your pet's normal. Week 2 onwards, any deviation triggers an alert.</p>
+    </div>
+    <div class="hgrid rv">
+      <div class="hcard"><span class="hi">📷</span><div class="hn">Camera observation</div><div class="hd">Detects posture, movement, excessive grooming, hiding, limping, pacing, and body language. IR night vision means monitoring never stops.</div><span class="htag tp">Visual AI</span></div>
+      <div class="hcard"><span class="hi">🎙️</span><div class="hn">Vocalisation tracking</div><div class="hd">Logs every meow, bark, whine, purr, and growl. Tracks frequency and intensity. Unusual vocalisation — too much or sudden silence — is flagged immediately.</div><span class="htag tp">Audio AI</span></div>
+      <div class="hcard"><span class="hi">🏃</span><div class="hn">Activity tracking</div><div class="hd">Collar accelerometer tracks every movement. Builds a daily activity score. Decline over several days is one of the earliest illness signals there is.</div><span class="htag tg">Collar</span></div>
+      <div class="hcard"><span class="hi">😴</span><div class="hn">Sleep quality</div><div class="hd">Tracks sleep duration, depth, location, and restlessness. Unusual sleep patterns — different spots, restless nights — logged and included in the daily report.</div><span class="htag tg">Collar</span></div>
+      <div class="hcard"><span class="hi">🌡️</span><div class="hn">Temperature trend</div><div class="hd">Collar monitors body temperature continuously. Not absolute readings — trend monitoring. A sustained rise above your pet's individual baseline is flagged as a potential fever.</div><span class="htag tgr">Trend</span></div>
+      <div class="hcard danger"><span class="hi">🚨</span><div class="hn">Anomaly detection</div><div class="hd">After learning your pet's baseline, Snugbi flags anything that deviates — lethargy, anxiety, excessive grooming, seizure-like movement, sudden behaviour change. You know before it becomes visible.</div><span class="htag tr">Early warning</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- DAILY PATTERN -->
+<section class="pattern" id="pattern">
+  <div class="inner">
+    <div class="two-col">
+      <div class="rv">
+        <p class="lbl">Daily pattern tracking</p>
+        <h2>Builds your pet's<br><em>unique profile.</em></h2>
+        <p class="body">Snugbi doesn't compare your pet to breed averages. It learns what's normal for your specific animal — then flags anything that deviates from that individual baseline. The more data it collects, the smarter it gets.</p>
+        <div class="pstats">
+          <div class="ps"><div class="ps-n">7</div><div class="ps-l">Days to establish baseline</div></div>
+          <div class="ps"><div class="ps-n">24/7</div><div class="ps-l">Continuous observation</div></div>
+          <div class="ps"><div class="ps-n">30+</div><div class="ps-l">Data points tracked daily</div></div>
+          <div class="ps"><div class="ps-n">∞</div><div class="ps-l">Profile improves over time</div></div>
+        </div>
+      </div>
+      <div class="tl rv">
+        <div class="tli"><div class="tld ok">🌅</div><div><div class="tlt">07:14</div><div class="tle">Morning activity — normal</div><div class="tldesc">Goya moved to food bowl, ate for 4 mins. Activity level normal for this time of day.</div></div></div>
+        <div class="tli"><div class="tld act">🎮</div><div><div class="tlt">09:30</div><div class="tle">Play session — peek a boo</div><div class="tldesc">12 minutes active play. High engagement. 3 treats earned. Activity score: 94/100 this hour.</div></div></div>
+        <div class="tli"><div class="tld ok">😴</div><div><div class="tlt">11:00 – 14:00</div><div class="tle">Rest period — normal</div><div class="tldesc">3 hours rest on sofa — usual spot. Normal for Goya at this time. No anomalies detected.</div></div></div>
+        <div class="tli"><div class="tld warn">⚠️</div><div><div class="tlt">14:12</div><div class="tle">Grooming anomaly detected</div><div class="tldesc">Left flank groomed for 22 mins — 3× above Goya's normal. Owner notified. Flagged in daily report.</div></div></div>
+        <div class="tli"><div class="tld ok">🌙</div><div><div class="tlt">22:45</div><div class="tle">Sleep — settled normally</div><div class="tldesc">Settled in usual spot. No restlessness. Temperature normal. Sleep quality: good.</div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SENSORS -->
+<section class="sensors" id="sensors">
+  <div class="inner">
+    <div class="hdr2">
+      <div class="rv">
+        <p class="lbl">Sensor stack</p>
+        <h2>Eight ways to<br><em>see everything.</em></h2>
+      </div>
+      <p class="body rv">A layered sensor system — camera, microphone, motion sensors, and collar data. If one has a limitation, the others fill the gap. No single point of failure.</p>
+    </div>
+    <div class="sgrid rv">
+      <div class="sc"><div class="sci sip">📷</div><div><div class="scn">Camera (recessed)</div><div class="scd">Wide-angle, IR night vision. Follows your pet at close range. Detects posture, grooming, hiding, body language.</div></div></div>
+      <div class="sc"><div class="sci sip">🎙️</div><div><div class="scn">Microphone</div><div class="scd">Sound classification AI. Logs all vocalisations regardless of camera angle or lighting conditions.</div></div></div>
+      <div class="sc"><div class="sci sig">🏃</div><div><div class="scn">Collar accelerometer</div><div class="scd">Tracks every movement from your pet's body. Activity, posture, sleep quality, scratching, seizure detection.</div></div></div>
+      <div class="sc"><div class="sci sig">🌡️</div><div><div class="scn">Collar temperature</div><div class="scd">Continuous body temperature trend monitoring. Flags sustained rises above your pet's individual baseline.</div></div></div>
+      <div class="sc"><div class="sci sip">📡</div><div><div class="scn">Bluetooth RSSI (following)</div><div class="scd">Bot reads collar signal strength to calculate distance. Follows your pet from room to room automatically.</div></div></div>
+      <div class="sc"><div class="sci sigr">🔁</div><div><div class="scn">PIR motion sensor (360°)</div><div class="scd">Detects movement in all directions — even when the camera is blocked or the pet is right next to the bot.</div></div></div>
+      <div class="sc"><div class="sci sigr">👆</div><div><div class="scn">Proximity + touch sensor</div><div class="scd">Detects when your pet is too close for the camera. Activates cuddle mode when they sit on Snugbi.</div></div></div>
+      <div class="sc"><div class="sci sir">⚡</div><div><div class="scn">Bot accelerometer</div><div class="scd">Detects if the bot has been knocked, pushed into a corner, or stuck. Self-reports its own limitations in the app.</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- REPORT -->
+<section class="report" id="report">
+  <div class="inner">
+    <div class="two-col">
+      <div class="rc rv">
+        <div class="rch"><div class="rct">🐱 Goya's daily report</div><div class="rcd">Thursday, 4 June</div></div>
+        <div class="rcr"><span class="rcl">Activity score</span><span class="rcv warn">72/100 ↓ slightly below avg</span></div>
+        <div class="rcr"><span class="rcl">Active hours</span><span class="rcv">3.2 hrs (avg 4.1 hrs)</span></div>
+        <div class="rcr"><span class="rcl">Sleep quality</span><span class="rcv ok">Good — 14.2 hrs settled ✓</span></div>
+        <div class="rcr"><span class="rcl">Vocalisation</span><span class="rcv ok">18 meows — normal ✓</span></div>
+        <div class="rcr"><span class="rcl">Grooming</span><span class="rcv warn">Elevated — left flank ⚠️</span></div>
+        <div class="rcr"><span class="rcl">Temperature trend</span><span class="rcv ok">Normal — no change ✓</span></div>
+        <div class="rcr"><span class="rcl">Play sessions</span><span class="rcv">2/3 — peek a boo favourite</span></div>
+        <div class="rcr"><span class="rcl">Mood estimate</span><span class="rcv ok">😊 Content — no stress signals</span></div>
+        <div class="rca">⚠️ Groomed left flank 22 mins at 2pm — 3× above Goya's normal. No other anomalies. Monitor next 2 days.</div>
+        <div class="rcf"><span>Weekly vet PDF ready</span><button class="dlb">Download PDF</button></div>
+      </div>
+      <div class="rv">
+        <p class="lbl">Daily report + vet PDF</p>
+        <h2>Know how they're doing.<br><em>Every single day.</em></h2>
+        <p class="body" style="margin-bottom:28px">No more guessing. No more "I think she's been quiet lately." Snugbi gives your vet 30 days of objective, structured data — the kind that changes diagnoses.</p>
+        <div class="rpts">
+          <div class="rp"><div class="rpi">📊</div><div><div class="rpt">Individual baseline — not breed averages</div><div class="rpd">Anomalies flagged against your specific pet's normal. Goya sleeping 14 hours is fine. 20 hours is a flag.</div></div></div>
+          <div class="rp"><div class="rpi">🩺</div><div><div class="rpt">Vet-ready PDF every week</div><div class="rpd">Structured 30-day report. Walk into any appointment with evidence. Early anomalies caught weeks before visible symptoms.</div></div></div>
+          <div class="rp"><div class="rpi">🔗</div><div><div class="rpt">Owner event correlation</div><div class="rpd">Log events in the app — new food, vet visit, you travelling. Snugbi correlates these with behaviour changes automatically.</div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PLAY -->
+<section class="play" id="play">
+  <div class="inner">
+    <div class="hdr2">
+      <div class="rv">
+        <p class="lbl">Play features</p>
+        <h2>Keeps them<br><em>happy and active.</em></h2>
+      </div>
+      <p class="body rv">A healthy pet is stimulated as well as monitored. Snugbi plays with your pet daily, adapts to their preferences, and keeps them physically and mentally active while you're away.</p>
+    </div>
+    <div class="ptabs rv">
+      <button class="tab on" onclick="swTab('cats',this)">🐱 Cats</button>
+      <button class="tab" onclick="swTab('dogs',this)">🐶 Dogs</button>
+      <button class="tab" onclick="swTab('both',this)">🐾 Both</button>
+    </div>
+    <div id="tc-cats" class="tc on pgrid rv">
+      <div class="pcard"><div class="pi">🔦</div><div class="pn">LED dot chase</div><div class="pd">Eye-safe LED projects a moving dot. Patterns vary automatically. AI learns which patterns your cat responds to.</div></div>
+      <div class="pcard"><div class="pi">🪶</div><div class="pn">Peek a boo</div><div class="pd">Feather arm appears and disappears rhythmically. Timing varies so cats can't predict it — mimics prey in grass.</div></div>
+      <div class="pcard"><div class="pi">🫣</div><div class="pn">Hide and seek</div><div class="pd">Snugbi moves to a hidden spot, makes a sound, and waits. Cat finds it. Time logged in activity score.</div></div>
+      <div class="pcard"><div class="pi">🌿</div><div class="pn">Scent mode</div><div class="pd">Releases catnip or valerian micro-amounts. Scientifically shown to reduce stress behaviours in cats by up to 30%.</div></div>
+      <div class="pcard"><div class="pi">🍖</div><div class="pn">Hide treat</div><div class="pd">Bot drops a treat in a spot and drives away. Cat hunts for it. Activates natural foraging behaviour.</div></div>
+      <div class="pcard"><div class="pi">🔊</div><div class="pn">Sound attraction</div><div class="pd">Bird calls, crinkle, chirping. AI learns which sounds get your cat's attention and uses them at the right moment.</div></div>
+    </div>
+    <div id="tc-dogs" class="tc pgrid rv">
+      <div class="pcard"><div class="pi">🏃</div><div class="pn">Follow me</div><div class="pd">Snugbi leads your dog around the room at their pace. Adjusts speed to energy level. Treat at the end.</div></div>
+      <div class="pcard"><div class="pi">🔍</div><div class="pn">Find me</div><div class="pd">Snugbi hides, plays your voice, waits to be found. Uses their natural scent-tracking instinct.</div></div>
+      <div class="pcard"><div class="pi">🎓</div><div class="pn">Training mode</div><div class="pd">Record a command in the app. Camera detects compliance. Treat dispensed if correct. Train while you're at work.</div></div>
+      <div class="pcard"><div class="pi">🎾</div><div class="pn">Fetch simulation</div><div class="pd">Snugbi moves away fast. Dog chases. Treat on return. Simulates the fetch loop without a human present.</div></div>
+      <div class="pcard"><div class="pi">🗣️</div><div class="pn">Voice playback</div><div class="pd">Your recorded voice plays to soothe your dog. Activates automatically when anxiety signals are detected.</div></div>
+      <div class="pcard"><div class="pi">🍖</div><div class="pn">Throw treat</div><div class="pd">Spring-loaded catapult launches a treat 30–50cm. Dog chases it. Combines movement and reward.</div></div>
+    </div>
+    <div id="tc-both" class="tc pgrid rv">
+      <div class="pcard"><div class="pi">🏃</div><div class="pn">Chase me</div><div class="pd">Snugbi moves away just fast enough to trigger the chase instinct without frustrating the pet.</div></div>
+      <div class="pcard"><div class="pi">🧩</div><div class="pn">Puzzle treat</div><div class="pd">Pet must interact in a specific way to earn a treat. Proven to increase activity in sedentary pets by 18%.</div></div>
+      <div class="pcard"><div class="pi">🔄</div><div class="pn">Novelty rotation</div><div class="pd">AI varies play patterns every 5–7 days to prevent habituation. Your pet never gets bored of Snugbi.</div></div>
+      <div class="pcard"><div class="pi">🌅</div><div class="pn">Morning wake up</div><div class="pd">Gentle sounds and movement at a scheduled time. Eases your pet into the day before you leave.</div></div>
+      <div class="pcard"><div class="pi">🌙</div><div class="pn">Wind down</div><div class="pd">Calm movement and soothing sounds before sleep time. Helps anxious pets settle at night.</div></div>
+      <div class="pcard"><div class="pi">👥</div><div class="pn">Two-pet mode</div><div class="pd">Separate collar IDs. Snugbi alternates attention. Separate health profiles and daily reports per pet.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- MODES -->
+<section class="modes" id="modes">
+  <div class="inner">
+    <div class="hdr2">
+      <div class="rv">
+        <p class="lbl">Smart modes</p>
+        <h2>Knows exactly<br><em>what to do.</em></h2>
+      </div>
+      <p class="body rv">Snugbi reads your pet's state and switches mode automatically. You don't have to manage it — it manages itself.</p>
+    </div>
+    <div class="mgrid rv">
+      <div class="mc"><span class="mi">👁️</span><div class="mn">Rest mode</div><div class="md">Still and watchful. All sensors active. Building your pet's health baseline silently in the background.</div><span class="mt">Default</span></div>
+      <div class="mc"><span class="mi">🎮</span><div class="mn">Play mode</div><div class="md">Moving, feather active, LED projecting, treats dispensing. Adapts every session based on what worked before.</div><span class="mt">Active</span></div>
+      <div class="mc"><span class="mi">🚨</span><div class="mn">Emergency mode</div><div class="md">Moves toward your pet. Records continuously. Owner alerted immediately. Logs everything for the vet.</div><span class="mt">Auto-triggered</span></div>
+      <div class="mc"><span class="mi">✈️</span><div class="mn">Away mode</div><div class="md">Heightened monitoring, more play sessions, higher alert sensitivity. Activate when you travel.</div><span class="mt">Travel</span></div>
+      <div class="mc"><span class="mi">🤗</span><div class="mn">Cuddle mode</div><div class="md">When your pet sits on Snugbi it stays perfectly still, plays a purring sound, and logs comfort time.</div><span class="mt">Touch-triggered</span></div>
+      <div class="mc"><span class="mi">💙</span><div class="mn">Comfort mode</div><div class="md">Plays your voice, emits calm tones. Triggered automatically when pacing, whining, or spinning is detected.</div><span class="mt">Anxiety response</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing" id="pricing">
+  <div class="inner">
+    <p class="lbl rv">Pricing</p>
+    <h2 class="rv">Simple, honest pricing.</h2>
+    <p class="body rv">Hardware once. Subscription monthly. Cancel anytime.</p>
+    <div class="pgr rv">
+      <div class="pc">
+        <div class="pname">Basic</div>
+        <div class="pprice">€8<span>/mo</span></div>
+        <div class="psub">+ €149 device (bot only)</div>
+        <div class="pdiv"></div>
+        <div class="pf"><span class="y">✓</span>Snugbi bot companion</div>
+        <div class="pf"><span class="y">✓</span>Live camera view</div>
+        <div class="pf"><span class="y">✓</span>All play modes</div>
+        <div class="pf"><span class="y">✓</span>Basic health alerts</div>
+        <div class="pf"><span class="y">✓</span>Daily report</div>
+        <div class="pf"><span class="n">✗</span>Smart collar</div>
+        <div class="pf"><span class="n">✗</span>Full health monitoring</div>
+        <div class="pf"><span class="n">✗</span>Vet PDF</div>
+        <button class="pbtn out" onclick="goWL()">Join waitlist</button>
+      </div>
+      <div class="pc hot">
+        <div class="pbadge">Most popular</div>
+        <div class="pname">Standard</div>
+        <div class="pprice">€12<span>/mo</span></div>
+        <div class="psub">+ €199 kit (bot + collar)</div>
+        <div class="pdiv"></div>
+        <div class="pf"><span class="y">✓</span>Bot + smart collar</div>
+        <div class="pf"><span class="y">✓</span>Snugbi follows your pet</div>
+        <div class="pf"><span class="y">✓</span>Full health monitoring</div>
+        <div class="pf"><span class="y">✓</span>Daily pattern tracking</div>
+        <div class="pf"><span class="y">✓</span>Anomaly detection</div>
+        <div class="pf"><span class="y">✓</span>Weekly vet PDF</div>
+        <div class="pf"><span class="n">✗</span>GPS tracking</div>
+        <button class="pbtn fill" onclick="goWL()">Join waitlist</button>
+      </div>
+      <div class="pc">
+        <div class="pname">Premium</div>
+        <div class="pprice">€18<span>/mo</span></div>
+        <div class="psub">+ €199 kit + GPS collar</div>
+        <div class="pdiv"></div>
+        <div class="pf"><span class="y">✓</span>Everything in Standard</div>
+        <div class="pf"><span class="y">✓</span>GPS tracking</div>
+        <div class="pf"><span class="y">✓</span>Escape geofence alert</div>
+        <div class="pf"><span class="y">✓</span>Extended cloud storage</div>
+        <div class="pf"><span class="y">✓</span>Priority support</div>
+        <div class="pf"><span class="y">✓</span>Heart rate (v2)</div>
+        <div class="pf"><span class="y">✓</span>Multi-pet profiles</div>
+        <button class="pbtn out" onclick="goWL()">Join waitlist</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEEDBACK -->
+<section class="feedback" id="feedback">
+  <div class="inner">
+    <p class="lbl rv">Prototype feedback</p>
+    <h2 class="rv">Help us build <em>Snugbi right.</em></h2>
+    <p class="body rv" style="margin:0 auto;text-align:center">This is an early prototype. Your feedback shapes what we build. Takes 2 minutes.</p>
+    <div class="fbc rv">
+      <div id="fbform">
+        <div class="fq">How excited are you about Snugbi?</div>
+        <div class="stars">
+          <span class="star" onclick="rate(1)">⭐</span>
+          <span class="star" onclick="rate(2)">⭐</span>
+          <span class="star" onclick="rate(3)">⭐</span>
+          <span class="star" onclick="rate(4)">⭐</span>
+          <span class="star" onclick="rate(5)">⭐</span>
+        </div>
+        <div class="fq">What matters most to you?</div>
+        <div class="fchks">
+          <span class="fck" onclick="tog(this)">❤️ Peace of mind</span>
+          <span class="fck" onclick="tog(this)">🩺 Vet reports</span>
+          <span class="fck" onclick="tog(this)">📡 Health monitoring</span>
+          <span class="fck" onclick="tog(this)">🎮 Play features</span>
+          <span class="fck" onclick="tog(this)">🚨 Anomaly alerts</span>
+          <span class="fck" onclick="tog(this)">📊 Daily patterns</span>
+          <span class="fck" onclick="tog(this)">🏃 Activity tracking</span>
+          <span class="fck" onclick="tog(this)">🍖 Treat dispenser</span>
+        </div>
+        <div class="fq">Would you buy this? What would you pay?</div>
+        <textarea id="fbtxt" placeholder="Tell us anything — what's missing, what you love, what price feels right, what concerns you..."></textarea>
+        <div class="fq" style="margin-top:14px">Your email (optional)</div>
+        <input type="email" id="fbemail" placeholder="your@email.com">
+        <br>
+        <button class="fbsub" onclick="subFB()">Send feedback 🐾</button>
+      </div>
+      <div class="fb-ok" id="fbok">
+        <div class="be">🐾</div>
+        <p>Thank you — your feedback genuinely helps us build Snugbi right.</p>
+        <p style="color:var(--muted);font-size:13px;margin-top:8px">We'll be in touch when we launch.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WAITLIST -->
+<section class="waitlist" id="waitlist">
+  <div class="inner">
+    <h2>Your pet deserves<br><em>a guardian.</em></h2>
+    <p class="wsub">Join the waitlist. Be first when Snugbi launches.</p>
+    <div class="wform">
+      <input type="email" class="wfield" id="wlemail" placeholder="your@email.com">
+      <button class="wbtn" onclick="goWL()">Get early access 🐾</button>
+    </div>
+    <p class="wnote">No spam. Just a heads-up when we launch.</p>
+    <div id="wlok" style="display:none;margin-top:16px"><p style="color:var(--green);font-size:15px;font-weight:500">🎉 You're on the list! We'll be in touch.</p></div>
+  </div>
+</section>
+
+<footer>
+  <div class="fl">Snugbi <small>your pet's guardian</small></div>
+  <div class="fc">© 2026 Snugbi · Prototype v0.2 · Not yet available for purchase</div>
+</footer>
+
+<script>
+// Reveal
+const obs=new IntersectionObserver(entries=>{entries.forEach((e,i)=>{if(e.isIntersecting){setTimeout(()=>e.target.classList.add('on'),i*50);obs.unobserve(e.target)}})},{threshold:.08,rootMargin:'0px 0px -30px 0px'});
+document.querySelectorAll('.rv').forEach(el=>obs.observe(el));
+
+// Tabs
+function swTab(t,btn){
+  document.querySelectorAll('.tab').forEach(b=>b.classList.remove('on'));
+  document.querySelectorAll('.tc').forEach(c=>c.classList.remove('on'));
+  btn.classList.add('on');
+  document.getElementById('tc-'+t).classList.add('on');
+}
+
+// Stars
+let rating=0;
+function rate(n){rating=n;document.querySelectorAll('.star').forEach((s,i)=>s.classList.toggle('on',i<n))}
+function tog(el){el.classList.toggle('on')}
+
+// Feedback
+function subFB(){
+  document.getElementById('fbform').style.display='none';
+  document.getElementById('fbok').style.display='block';
+}
+
+// Waitlist
+function goWL(){
+  const inp=document.getElementById('wlemail');
+  if(inp&&(!inp.value||!inp.value.includes('@'))){inp.style.borderColor='rgba(240,80,80,.5)';inp.focus();return}
+  const btn=document.querySelector('.wbtn');
+  if(btn){btn.textContent="✓ You're on the list!";btn.style.background='var(--green)'}
+  document.getElementById('wlok').style.display='block';
+  if(inp){inp.value='';inp.style.borderColor='rgba(110,231,183,.4)'}
+}
+
+// Smooth scroll
+document.querySelectorAll('a[href^="#"]').forEach(a=>{
+  a.addEventListener('click',e=>{
+    e.preventDefault();
+    const t=document.querySelector(a.getAttribute('href'));
+    if(t)t.scrollIntoView({behavior:'smooth',block:'start'});
+  });
+});
+</script>
+</body>
+</html>
