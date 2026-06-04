@@ -555,6 +555,7 @@ footer{background:var(--night);border-top:1px solid rgba(255,255,255,.04);paddin
           <span class="star" onclick="rate(4)">⭐</span>
           <span class="star" onclick="rate(5)">⭐</span>
         </div>
+        <input type="hidden" id="ratingVal" name="rating" value="">
         <div class="fq">What matters most to you?</div>
         <div class="fchks">
           <span class="fck" onclick="tog(this)">❤️ Peace of mind</span>
@@ -619,10 +620,26 @@ let rating=0;
 function rate(n){rating=n;document.querySelectorAll('.star').forEach((s,i)=>s.classList.toggle('on',i<n))}
 function tog(el){el.classList.toggle('on')}
 
-// Feedback
-function subFB(){
-  document.getElementById('fbform').style.display='none';
-  document.getElementById('fbok').style.display='block';
+// Feedback — submits to Formspree
+async function subFB(){
+  const checks=[...document.querySelectorAll('.fck.on')].map(el=>el.textContent).join(', ');
+  const data={
+    rating: rating+' stars',
+    interests: checks||'none selected',
+    message: document.getElementById('fbtxt').value,
+    email: document.getElementById('fbemail').value
+  };
+  try{
+    const res=await fetch('https://formspree.io/f/xzdqzdjp',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Accept':'application/json'},
+      body:JSON.stringify(data)
+    });
+    if(res.ok){
+      document.getElementById('fbform').style.display='none';
+      document.getElementById('fbok').style.display='block';
+    } else { alert('Something went wrong — please try again.'); }
+  } catch(e){ alert('Something went wrong — please try again.'); }
 }
 
 // Waitlist
